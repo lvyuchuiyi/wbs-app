@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>WBS 工作协作</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Noto Sans SC","Inter",sans-serif}
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
 body{background:#f0f2f6;color:#0f1825;min-height:100vh}
 .hd{height:60px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid #eaecf0;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:50}
 .ly{display:flex;gap:24px;padding:24px 28px;max-width:1440px;margin:0 auto}
@@ -75,7 +75,7 @@ body{background:#f0f2f6;color:#0f1825;min-height:100vh}
 .dv{border-top:1px solid #e5e7eb;padding-top:12px}.dv label{font-size:12px;color:#5b677b;font-weight:500}
 .ts3{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(15,24,37,.9);color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;z-index:200}
 </style>
-<script src="https://unpkg.com/peerjs@1.5.1/dist/peerjs.min.js"></script></head>
+</head>
 <body><div id="app"></div>
 <script>
 window.onerror=function(m){document.getElementById("app").innerHTML+="<div style=background:#fee2e2;color:#991b1b;padding:10px;margin:10px;border-radius:8px;font-size:13px>ERROR: "+m+"</div>"};var D={room:"",tasks:[],sel:null,col:{},filter:"",tab:"all"},_id=1;
