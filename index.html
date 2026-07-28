@@ -94,6 +94,7 @@ function es(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").r
 // ====== WebRTC 网络同步 (PeerJS) ======
 var peer=null,conn=null,peerId="";
 function startSync(room){
+  if(!room){return}
   if(peer){try{peer.destroy()}catch(e){}}
   var rid="wbs-"+room.replace(/[^a-z0-9]/gi,"-");
   peer=new Peer(rid,{debug:0});
