@@ -158,7 +158,7 @@ up=function(i,c){_origUp(i,c);broadcast({a:"upd",i:i,c:c})};
 de=function(i){_origDel(i);broadcast({a:"del",i:i})};
 // ====== 进入房间时启动网络同步 ======
 var _origEn=en;
-en=function(){_origEn();if(D.room){startSync(D.room)}}function ts(m){var e=document.getElementById("ts");if(!e){e=document.createElement("div");e.id="ts";e.className="ts3";document.body.appendChild(e)}e.textContent=m;e.style.display="block";clearTimeout(e._t);e._t=setTimeout(function(){e.style.display="none"},2500)}
+en=function(){_origEn();if(D.room){startSync(D.room)}};function ts(m){var e=document.getElementById("ts");if(!e){e=document.createElement("div");e.id="ts";e.className="ts3";document.body.appendChild(e)}e.textContent=m;e.style.display="block";clearTimeout(e._t);e._t=setTimeout(function(){e.style.display="none"},2500)}
 function en(){var v=document.getElementById("ri").value.trim();if(!v){return}D.room=v;var u=new URL(window.location);u.searchParams.set("room",v);window.history.replaceState({},"",u);var k="w_"+v;try{var d=JSON.parse(localStorage.getItem(k));if(Array.isArray(d)){D.tasks=d;D.tasks.forEach(function(t){var n=parseInt(t.id.slice(1));if(n>=_id){_id=n+1}})}}catch(e){}rt()}
 function add(n,p){D.tasks.push({id:id$(),name:n,o:"",s:"todo",p:"m",start:"",end:"",desc:"",tag:"",parentId:p||null});if(p){D.col[p]=false}sv();rt()}
 function up(i,c){var t=gt(i);if(t){for(var k in c){t[k]=c[k]}sv();rt()}}
