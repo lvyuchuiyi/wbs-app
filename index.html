@@ -89,7 +89,85 @@ function pr(i){var t=gt(i);if(!t){return 0}var c=gc(i);if(!c.length){return t.s=
 function gds(i){var a=[i];gc(i).forEach(function(c){a=a.concat(gds(c.id))});return a}
 function gO(t){return t.o?t.o.split(",").map(function(s){return s.trim()}).filter(function(s){return s}):[]}
 function aO(){var m={};D.tasks.forEach(function(t){gO(t).forEach(function(o){m[o]=true})});return Object.keys(m)}
-function sv(){try{localStorage.setItem("w_"+D.room,JSON.stringify(D.tasks))}catch(e){}}
+function sv(){try{localStorage.setItem("w_"+D.room,JSON.stringify(D.tasks))}catch(e){}}// ====== GitHub 数据同步 ======
+var _syncToken = localStorage.getItem("_gh_token")||"";if(!_syncToken){_syncToken=prompt("请输入 GitHub Token (首次使用需要):","ghp_");if(_syncToken){localStorage.setItem("_gh_token",_syncToken)}}
+var _syncUser = "lvyuchuiyi";
+var _syncRepo = "wbs-app";
+var _syncFile = "";
+var _syncTimer = null;
+var _syncSha = null;
+
+function syncStart(){
+  if(!D.room){return}
+  _syncFile = "data/" + D.room + ".json";
+  syncPush();
+  if(_syncTimer){clearInterval(_syncTimer)}
+  _syncTimer = setInterval(syncPull, 8000);
+}
+
+function syncPush(){
+  if(!D.room||!D.tasks)return;
+  var data = JSON.stringify({tasks:D.tasks, room:D.room, time:new Date().toISOString()});
+  var b64 = btoa(unescape(encodeURIComponent(data)));
+  var body = {message:"sync "+D.room, content:b64, branch:"main"};
+  if(_syncSha){body.sha=_syncSha}
+  var h = new XMLHttpRequest();
+  h.open("PUT", "https://api.github.com/repos/"+_syncUser+"/"+_syncRepo+"/contents/"+_syncFile, true);
+  h.setRequestHeader("Authorization","token "+_syncToken);
+  h.setRequestHeader("Accept","application/vnd.github.v3+json");
+  h.onload = function(){
+    if(h.status===200||h.status===201){
+      var r = JSON.parse(h.responseText);
+      if(r.content) _syncSha = r.content.sha;
+    }
+  };
+  h.send(JSON.stringify(body));
+}
+
+function syncPull(){
+  if(!D.room)return;
+  var h = new XMLHttpRequest();
+  h.open("GET", "https://api.github.com/repos/"+_syncUser+"/"+_syncRepo+"/contents/"+_syncFile, true);
+  h.setRequestHeader("Authorization","token "+_syncToken);
+  h.setRequestHeader("Accept","application/vnd.github.v3+json");
+  h.onload = function(){
+    if(h.status===200){
+      var r = JSON.parse(h.responseText);
+      _syncSha = r.sha;
+      var content = decodeURIComponent(escape(atob(r.content)));
+      try{
+        var d = JSON.parse(content);
+        if(d.tasks&&Array.isArray(d.tasks)){
+          var localTime = D._lastSync||0;
+          var remoteTime = new Date(d.time).getTime();
+          if(remoteTime>localTime){
+            D.tasks = d.tasks;
+            D.tasks.forEach(function(t){var n=parseInt(t.id.slice(1));if(n>=_id)_id=n+1});
+            D._lastSync = remoteTime;
+            sv();rt();
+          }
+        }
+      }catch(e){}
+    } else if(h.status===404){
+      // File doesn't exist yet, push on next save
+    }
+  };
+  h.send();
+}
+
+// Override save to push to GitHub
+var _origSv = sv;
+sv = function(){
+  _origSv();
+  syncPush();
+};
+
+// Override enter to start sync
+var _origEn2 = en;
+en = function(){
+  _origEn2();
+  if(D.room){syncStart()}
+};
 function es(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
 // ====== 进入房间时启动网络同步 ======
 var _origEn=en;
@@ -268,7 +346,7 @@ function renderWelcome(app){
   wc.appendChild(wb);app.appendChild(wc);
   document.getElementById("ri").addEventListener("keydown",function(e){if(e.key==="Enter"){en()}});
 }
-(function(){var ru=(new URLSearchParams(window.location.search)).get("room");if(ru){D.room=ru;var k="w_"+ru;try{var d=JSON.parse(localStorage.getItem(k));if(Array.isArray(d)){D.tasks=d;D.tasks.forEach(function(t){var n=parseInt(t.id.slice(1));if(n>=_id){_id=n+1}})}}catch(e){}}rt()})();
+(function(){var ru=(new URLSearchParams(window.location.search)).get("room");if(ru){D.room=ru;var k="w_"+ru;try{var d=JSON.parse(localStorage.getItem(k));if(Array.isArray(d)){D.tasks=d;D.tasks.forEach(function(t){var n=parseInt(t.id.slice(1));if(n>=_id){_id=n+1}})}}catch(e){}syncStart()}rt()})();
 </script>
 </body>
 </html>
