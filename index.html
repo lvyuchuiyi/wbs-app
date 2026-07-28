@@ -78,7 +78,7 @@ body{background:#f0f2f6;color:#0f1825;min-height:100vh}
 </head>
 <body><div id="app"></div>
 <script>
-window.onerror=function(m){document.getElementById("app").innerHTML+="<div style=background:#fee2e2;color:#991b1b;padding:10px;margin:10px;border-radius:8px;font-size:13px>ERROR: "+m+"</div>"};var D={room:"",tasks:[],sel:null,col:{},filter:"",tab:"all"},_id=1;
+var D={room:"",tasks:[],sel:null,col:{},filter:"",tab:"all"},_id=1;
 function id$(){return"t"+(_id++)}
 function gt(i){return D.tasks.find(function(t){return t.id===i})}
 function gc(p){return D.tasks.filter(function(t){return t.parentId===p})}
