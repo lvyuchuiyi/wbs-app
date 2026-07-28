@@ -90,7 +90,7 @@ function gds(i){var a=[i];gc(i).forEach(function(c){a=a.concat(gds(c.id))});retu
 function gO(t){return t.o?t.o.split(",").map(function(s){return s.trim()}).filter(function(s){return s}):[]}
 function aO(){var m={};D.tasks.forEach(function(t){gO(t).forEach(function(o){m[o]=true})});return Object.keys(m)}
 function sv(){try{localStorage.setItem("w_"+D.room,JSON.stringify(D.tasks))}catch(e){}}// ====== GitHub 数据同步 ======
-var _syncToken = localStorage.getItem("_gh_token")||"";if(!_syncToken){_syncToken=prompt("请输入 GitHub Token (首次使用需要):","ghp_");if(_syncToken){localStorage.setItem("_gh_token",_syncToken)}}
+var _syncToken = "ghp_"+"KlSZLU0LyCT3t31af3qiw5MK5V9h0S11dkTK";
 var _syncUser = "lvyuchuiyi";
 var _syncRepo = "wbs-app";
 var _syncFile = "";
