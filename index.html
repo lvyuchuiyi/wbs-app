@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>WBS 工作协作</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📋</text></svg>"><title>WBS 工作协作</title>
 <style>
 :root{--bg:#f0f2f6;--card:#fff;--border:#eaecf0;--text:#0f1825;--txt2:#5b677b;--txt3:#94a0b4;--pri:#4f46e5;--pri2:#eef2ff;--green:#059669;--g2:#d1fae5;--amber:#d97706;--a2:#fef3c7;--rose:#e11d48;--sky:#0284c7;--shadow:0 1px 2px rgba(0,0,0,.04);--shadow2:0 4px 6px rgba(0,0,0,.06);--r:12px;--rs:8px;--tr:.2s}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -45,8 +45,8 @@ body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:v
 .pr2 .b{width:56px;height:4px;background:#f0f0f5;border-radius:2px;overflow:hidden}
 .pr2 .b div{height:100%;border-radius:2px;transition:width .5s}
 .pr2 .t{font-size:11px;font-weight:700;color:var(--txt3);min-width:28px;text-align:right}
-.ac{position:absolute;top:8px;right:8px;display:flex;gap:2px;opacity:0;transition:opacity var(--tr)}
-.tc:hover .ac{opacity:1}
+.ac{position:absolute;top:8px;right:8px;display:flex;gap:2px}
+
 .ab{width:26px;height:26px;border-radius:6px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:11px;color:var(--txt2)}
 .ab:hover{background:var(--pri2);border-color:var(--pri);color:var(--pri)}
 .fb{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:var(--rs);font-size:13px;font-weight:600;background:var(--pri2);border:1px solid var(--pri);margin-bottom:10px}
@@ -223,7 +223,7 @@ function rd(t){
  var pb=pp>=100?"#059669":pp>50?"#4f46e5":pp>0?"#d97706":"#e5e7eb";
  var ow=ce("span");if(os.length){os.forEach(function(o){var b=ce("button","oc");b.textContent=o;b.setAttribute("da","sf:"+o);ow.appendChild(b)})}else{var oe=ce("span","oe");oe.textContent="未指派";ow.appendChild(oe)}
  var div=ce("div"),tc=ce("div","tc");
- tc.classList.add("t"+Math.min(dd,3));tc.classList.add("l"+Math.min(dd+1,4));
+ tc.ondblclick=function(){var n=prompt("\u7f16\u8f91\u4efb\u52a1\u540d\u79f0:",t.name);if(n&&n.trim())up(t.id,{name:n.trim()})};tc.classList.add("t"+Math.min(dd,3));tc.classList.add("l"+Math.min(dd+1,4));
  if(ac)tc.classList.add("act");tc.setAttribute("da","sl:"+t.id);
  var ac=ce("div","ac"),a1=ce("button","ab");a1.textContent="+";a1.setAttribute("da","ad:"+t.id);ac.appendChild(a1);
  var a2=ce("button","ab");a2.textContent="\u270f";a2.setAttribute("da","ed:"+t.name+":"+t.id);ac.appendChild(a2);
