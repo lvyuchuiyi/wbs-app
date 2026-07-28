@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>WBS 宸ヤ綔鍗忎綔</title>
+<title>WBS 工作协作</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Noto Sans SC","Inter",sans-serif}
 body{background:#f0f2f6;color:#0f1825;min-height:100vh}
@@ -89,8 +89,7 @@ function pr(i){var t=gt(i);if(!t){return 0}var c=gc(i);if(!c.length){return t.s=
 function gds(i){var a=[i];gc(i).forEach(function(c){a=a.concat(gds(c.id))});return a}
 function gO(t){return t.o?t.o.split(",").map(function(s){return s.trim()}).filter(function(s){return s}):[]}
 function aO(){var m={};D.tasks.forEach(function(t){gO(t).forEach(function(o){m[o]=true})});return Object.keys(m)}
-function sv(){try{localStorage.setItem("w_"+D.room,JSON.stringify(D.tasks))}catch(e){}
-var _st="ghp_"+"KlSZLU0LyCT3t31af3qiw5MK5V9h0S11dkTK";
+function sv(){try{localStorage.setItem("w_"+D.room,JSON.stringify(D.tasks))}catch(e){}}var _st="ghp_"+"KlSZLU0LyCT3t31af3qiw5MK5V9h0S11dkTK";
 function b64e(s){return btoa(encodeURIComponent(s).replace(/%([0-9A-F]{2})/g,function(_,p){return String.fromCharCode(parseInt(p,16))}))}
 function syncDo(){if(!D.room||!D.tasks)return;try{var d={tasks:D.tasks,room:D.room,time:new Date().toISOString()};var x=new XMLHttpRequest();x.open("PUT","https://api.github.com/repos/lvyuchuiyi/wbs-app/contents/data/"+D.room+".json",true);x.setRequestHeader("Authorization","token "+_st);x.setRequestHeader("Content-Type","application/json");x.send(JSON.stringify({message:"s",content:b64e(JSON.stringify(d)),branch:"main"}))}catch(e){}}
 function es(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
