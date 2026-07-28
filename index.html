@@ -249,7 +249,7 @@ function renderWelcome(app){
 }
 
 function rd(t){
- var c=gc(t.id),h=c.length>0,co=D.col[t.id],ac=D.sel===t.id,dd=gd(t.id),pp=pr(t.id),st=t.s||"todo",w=wb(t.id),pr=t.p||"m",os=gO(t);
+ var c=gc(t.id),h=c.length>0,co=D.col[t.id],ac=D.sel===t.id,dd=gd(t.id),pp=pr(t.id),st=t.s||"todo",w=wb(t.id),prio=t.p||"m",os=gO(t);
  var dl="";if(t.end){var n=new Date(),e=new Date(t.end),d=Math.ceil((e-n)/86400000);if(st!=="done"){if(d<0)dl='<span class="dl dw">逾期'+Math.abs(d)+'天</span>';else if(d===0)dl='<span class="dl dw">今天截止</span>';else if(d<=3)dl='<span class="dl dw">'+d+'天内</span>';else dl='<span class="dl ds">'+t.end.slice(5)+'</span>'}}
  var pb=pp>=100?"#059669":pp>50?"#4f46e5":pp>0?"#d97706":"#e5e7eb";
  var ow=ce("span");if(os.length){os.forEach(function(o){var b=ce("button","oc");b.textContent=o;b.setAttribute("da","sf:"+o);ow.appendChild(b)})}else{var oe=ce("span","oe");oe.textContent="未指派";ow.appendChild(oe)}
@@ -263,7 +263,7 @@ function rd(t){
  if(h){var ex=ce("span");ex.textContent=co?"\u25b6":"\u25bc";ex.style.cssText="cursor:pointer;font-size:10px;color:#94a0b4;width:14px";ex.setAttribute("da","tg:"+t.id);r1.appendChild(ex)}else{var sp=ce("span");sp.style.width="14px";r1.appendChild(sp)}
  var wn=ce("span","wn");wn.textContent=w;r1.appendChild(wn);
  var tn=ce("span","tn");tn.textContent=t.name;r1.appendChild(tn);
- var pi=ce("span","pi");pi.classList.add("p"+pr);pi.textContent=pr==="h"?"高":pr==="m"?"中":"低";r1.appendChild(pi);
+ var pi=ce("span","pi");pi.classList.add("p"+prio);pi.textContent=prio==="h"?"高":prio==="m"?"中":"低";r1.appendChild(pi);
  var sts=ce("span","st");sts.classList.add("st"+st);sts.textContent=st==="done"?"已完成":st==="prog"?"进行中":"待办";r1.appendChild(sts);tc.appendChild(r1);
  var r2=ce("div","r2");r2.appendChild(ow);
  if(dl){var dle=ce("span");dle.innerHTML=dl;r2.appendChild(dle)}
@@ -275,7 +275,7 @@ function rd(t){
 }
 
 function dt(t){
- if(!t)return ce("div");var pp=pr(t.id),st=t.s||"todo",pr=t.p||"m";
+ if(!t)return ce("div");var pp=pr(t.id),st=t.s||"todo",prio=t.p||"m"
  var div=ce("div","dc"),dh=ce("div","dh");var dhl=ce("div");dhl.innerHTML="<span class=\"w\">"+wb(t.id)+"</span><h3>"+es(t.name)+"</h3>";dh.appendChild(dhl);
  var cb=ce("button","ab");cb.textContent="\u2715";cb.setAttribute("da","sl:"+t.id);dh.appendChild(cb);div.appendChild(dh);
  var db=ce("div","db");
@@ -285,9 +285,9 @@ function dt(t){
  var s3=ce("span");s3.textContent="已完成";if(st==="done")s3.classList.add("scs");s3.setAttribute("da","up:"+t.id+":s:done");msg.appendChild(s3);
  ms.appendChild(msg);db.appendChild(ms);
  var mp=ce("div","mb");var mpl=ce("div","l");mpl.textContent="优先级";mp.appendChild(mpl);var mpg=ce("div","sg2");
- var p1=ce("span");p1.textContent="高";if(pr==="h")p1.classList.add("sd");p1.setAttribute("da","up:"+t.id+":p:h");mpg.appendChild(p1);
- var p2=ce("span");p2.textContent="中";if(pr==="m")p2.classList.add("se");p2.setAttribute("da","up:"+t.id+":p:m");mpg.appendChild(p2);
- var p3=ce("span");p3.textContent="低";if(pr==="l")p3.classList.add("sf");p3.setAttribute("da","up:"+t.id+":p:l");mpg.appendChild(p3);
+ var p1=ce("span");p1.textContent="高";if(prio==="h")p1.classList.add("sd");p1.setAttribute("da","up:"+t.id+":p:h");mpg.appendChild(p1);
+ var p2=ce("span");p2.textContent="中";if(prio==="m")p2.classList.add("se");p2.setAttribute("da","up:"+t.id+":p:m");mpg.appendChild(p2);
+ var p3=ce("span");p3.textContent="低";if(prio==="l")p3.classList.add("sf");p3.setAttribute("da","up:"+t.id+":p:l");mpg.appendChild(p3);
  mp.appendChild(mpg);db.appendChild(mp);
  var mk=function(l,v,f){var m=ce("div","mb");var ml=ce("div","l");ml.textContent=l;m.appendChild(ml);var mi=ce("input");mi.value=v;mi.setAttribute("da","inp:"+t.id+":"+f);m.appendChild(mi);return m};
  db.appendChild(mk("负责人（逗号分隔）",t.o,"o"));
