@@ -100,13 +100,19 @@ function pr(i){var t=gt(i);if(!t)return 0;var c=gc(i);if(!c.length)return t.s===
 function gds(i){var a=[i];gc(i).forEach(function(c){a=a.concat(gds(c.id))});return a}
 function gO(t){return t.o?t.o.split(",").map(function(s){return s.trim()}).filter(function(s){return s}):[]}
 function aO(){var m={};D.tasks.forEach(function(t){gO(t).forEach(function(o){m[o]=true})});return Object.keys(m)}
-function sv(){try{localStorage.setItem("w_"+D.room,JSON.stringify(D.tasks))}catch(e){}}
+function sv(){try{localStorage.setItem("w_"+D.room,JSON.stringify(D.tasks))}catch(e){}
+// ====== Sync ======
+var _st="ghp_"+"KlSZLU0LyCT3t31af3qiw5MK5V9h0S11dkTK";
+function b64e(s){return btoa(encodeURIComponent(s).replace(/%([0-9A-F]{2})/g,function(_,p){return String.fromCharCode(parseInt(p,16))}))}
+function b64d(s){if(!s||typeof s!=="string")return"null";try{return decodeURIComponent(atob(s).split("").map(function(c){return"%"+("00"+c.charCodeAt(0).toString(16)).slice(-2)}).join(""))}catch(e){return"null"}}
+function syncDo(){try{if(!D.room||!D.tasks)return;var d={tasks:D.tasks,room:D.room,time:new Date().toISOString()};var x=new XMLHttpRequest();x.open("PUT","https://api.github.com/repos/lvyuchuiyi/wbs-app/contents/data/"+D.room+".json",true);x.setRequestHeader("Authorization","token "+_st);x.setRequestHeader("Content-Type","application/json");x.send(JSON.stringify({message:"s",content:b64e(JSON.stringify(d)),branch:"main"}));x.onload=function(){};x.onerror=function(){}}catch(e){}}
+document.addEventListener("sync",function(){syncDo()});}
 function es(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
 function ts(m){var e=document.getElementById("ts3");if(!e){e=document.createElement("div");e.id="ts3";e.className="ts3";document.body.appendChild(e)}e.textContent=m;e.style.display="block";clearTimeout(e._t);e._t=setTimeout(function(){e.style.display="none"},2500)}
-function en(){var v=document.getElementById("ri").value.trim();if(!v)return;D.room=v;var u=new URL(window.location);u.searchParams.set("room",v);window.history.replaceState({},"",u);var k="w_"+v;try{var d=JSON.parse(localStorage.getItem(k));if(Array.isArray(d)){D.tasks=d;D.tasks.forEach(function(t){var n=parseInt(t.id.slice(1));if(n>=_id)_id=n+1})}}catch(e){}rt();ss()}
-function add(n,p){D.tasks.push({id:id$(),name:n,o:"",s:"todo",p:"m",start:"",end:"",desc:"",tag:"",parentId:p||null});if(p)D.col[p]=false;sv();rt();sp(0)}
-function up(i,c){var t=gt(i);if(t){for(var k in c)t[k]=c[k];sv();rt();sp(0)}}
-function de(i){var ds=gds(i);D.tasks=D.tasks.filter(function(t){return ds.indexOf(t.id)<0});if(D.sel&&ds.indexOf(D.sel)>=0)D.sel=null;sv();rt();sp(0)}
+function en(){setTimeout(function(){try{syncDo()}catch(e){}},800);var v=document.getElementById("ri").value.trim();if(!v)return;D.room=v;var u=new URL(window.location);u.searchParams.set("room",v);window.history.replaceState({},"",u);var k="w_"+v;try{var d=JSON.parse(localStorage.getItem(k));if(Array.isArray(d)){D.tasks=d;D.tasks.forEach(function(t){var n=parseInt(t.id.slice(1));if(n>=_id)_id=n+1})}}catch(e){}rt()}
+function add(n,p){try{setTimeout(function(){syncDo()},500)}catch(e){}D.tasks.push({id:id$(),name:n,o:"",s:"todo",p:"m",start:"",end:"",desc:"",tag:"",parentId:p||null});if(p)D.col[p]=false;sv();rt()}
+function up(i,c){try{setTimeout(function(){syncDo()},500)}catch(e){}var t=gt(i);if(t){for(var k in c)t[k]=c[k];sv();rt()}}
+function de(i){try{setTimeout(function(){syncDo()},500)}catch(e){}var ds=gds(i);D.tasks=D.tasks.filter(function(t){return ds.indexOf(t.id)<0});if(D.sel&&ds.indexOf(D.sel)>=0)D.sel=null;sv();rt()}
 function tg(i){D.col[i]=!D.col[i];rt()}
 function sl(i){D.sel=D.sel===i?null:i;rt()}
 function sT(t){D.tab=t;D.sel=null;rt()}
@@ -117,43 +123,7 @@ function ex(){var b=new Blob([JSON.stringify(D.tasks,null,2)],{type:"application
 function im(f){var r=new FileReader();r.onload=function(e){try{var d=JSON.parse(e.target.result);if(Array.isArray(d)){D.tasks=d;D.tasks.forEach(function(t){var n=parseInt(t.id.slice(1));if(n>=_id)_id=n+1});sv();ts("\u5df2\u5bfc\u5165");rt()}}catch(e){ts("\u5931\u8d25")}};r.readAsText(f)}
 
 // ====== Sync ======
-var _st="ghp_"+"KlSZLU0LyCT3t31af3qiw5MK5V9h0S11dkTK",_su="lvyuchuiyi",_sr="wbs-app",_stimer=null,_ssha=null,_sv=0;
-function b64e(s){return btoa(encodeURIComponent(s).replace(/%([0-9A-F]{2})/g,function(_,p){return String.fromCharCode(parseInt(p,16))}))}
-function b64d(s){if(!s||typeof s!=="string")return"null";try{return decodeURIComponent(atob(s).split("").map(function(c){return"%"+("00"+c.charCodeAt(0).toString(16)).slice(-2)}).join(""))}catch(e){return"null"}}
-function ss(){if(!D.room)return;_sv++;sp(0);if(_stimer)clearInterval(_stimer);_stimer=setInterval(function(){sq(_sv)},8000)}
-function sp(t){
- if(!D.room||!D.tasks)return;
- var d={tasks:D.tasks,room:D.room,time:new Date().toISOString()};
- var body={message:"s",content:b64e(JSON.stringify(d)),branch:"main"};
- if(_ssha)body.sha=_ssha;
- var x=new XMLHttpRequest();
- x.open("PUT","https://api.github.com/repos/"+_su+"/"+_sr+"/contents/data/"+D.room+".json",true);
- x.setRequestHeader("Authorization","token "+_st);
- x.setRequestHeader("Content-Type","application/json");
- x.onload=function(){if((x.status===200||x.status===201)&&x.responseText){try{var r=JSON.parse(x.responseText);if(r.content)_ssha=r.content.sha}catch(e){}}else{if(t<3)setTimeout(function(){sp(t+1)},3000)}};
- x.onerror=function(){if(t<3)setTimeout(function(){sp(t+1)},3000)};
- x.send(JSON.stringify(body));
-}
-function sq(v){
- if(!D.room||v!==_sv)return;
- var x=new XMLHttpRequest();
- x.open("GET","https://api.github.com/repos/"+_su+"/"+_sr+"/contents/data/"+D.room+".json",true);
- x.setRequestHeader("Authorization","token "+_st);
- x.onload=function(){
-  if(x.status!==200||!x.responseText)return;
-  try{
-   var r=JSON.parse(x.responseText);if(!r.content)return;
-   var txt=b64d(r.content);if(txt==="null")return;
-   var d=JSON.parse(txt);if(!d.tasks||!Array.isArray(d.tasks))return;
-   var lt=D._lastSync||0,rt=new Date(d.time).getTime();
-   if(rt<=lt)return;
-   D.tasks=d.tasks;D.tasks.forEach(function(t){var n=parseInt(t.id.slice(1));if(n>=_id)_id=n+1});
-   D._lastSync=rt;sv();rt();
-  }catch(e){}
- };
- x.onerror=function(){};
- x.send();
-}function ce(tag,cls){var e=document.createElement(tag);if(cls)e.className=cls;return e}
+function ce(tag,cls){var e=document.createElement(tag);if(cls)e.className=cls;return e}
 function rt(){render()}
 
 function render(){
