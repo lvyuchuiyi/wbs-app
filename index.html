@@ -91,75 +91,9 @@ function gO(t){return t.o?t.o.split(",").map(function(s){return s.trim()}).filte
 function aO(){var m={};D.tasks.forEach(function(t){gO(t).forEach(function(o){m[o]=true})});return Object.keys(m)}
 function sv(){try{localStorage.setItem("w_"+D.room,JSON.stringify(D.tasks))}catch(e){}}
 function es(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
-// ====== WebRTC 网络同步 (PeerJS) ======
-var peer=null,conn=null,peerId="";
-function startSync(room){
-  if(!room){return}
-  if(peer){try{peer.destroy()}catch(e){}}
-  var rid="wbs-"+room.replace(/[^a-z0-9]/gi,"-");
-  peer=new Peer(rid,{debug:0});
-  peer.on("open",function(id){
-    peerId=id;
-    ts("房间已创建: "+room);
-    // Listen for others joining
-    peer.on("connection",function(c){
-      conn=c;
-      conn.on("open",function(){
-        // Send current state to new joiner
-        conn.send({t:"sync",d:D.tasks});
-        ts("新成员已加入");
-      });
-      conn.on("data",function(d){handleNetData(d)});
-    });
-  });
-  peer.on("error",function(err){
-    if(err.type==="unavailable-id"){
-      // Room exists, join it
-      peer.destroy();
-      peer=new Peer(undefined,{debug:0});
-      peer.on("open",function(id){
-        peerId=id;
-        conn=peer.connect(rid,{reliable:true});
-        conn.on("open",function(){ts("已加入房间: "+room)});
-        conn.on("data",function(d){handleNetData(d)});
-      });
-    }
-  });
-}
-function handleNetData(d){
-  if(!d||!d.t)return;
-  if(d.t==="sync"){
-    if(Array.isArray(d.d)&&d.d.length>0){
-      D.tasks=d.d;
-      D.tasks.forEach(function(t){var n=parseInt(t.id.slice(1));if(n>=_id)_id=n+1});
-      sv();rt();
-    }
-  }
-  if(d.t==="op"){
-    var o=d.d;
-    if(o.a==="add"&&!gt(o.t.id)){D.tasks.push(o.t);sv();rt()}
-    if(o.a==="upd"){var t=gt(o.i);if(t){for(var k in o.c)t[k]=o.c[k];sv();rt()}}
-    if(o.a==="del"){var ds=gds(o.i);D.tasks=D.tasks.filter(function(t){return ds.indexOf(t.id)<0});if(D.sel&&ds.indexOf(D.sel)>=0)D.sel=null;sv();rt()}
-  }
-}
-function broadcast(op){
-  if(conn&&conn.open){conn.send({t:"op",d:op})}
-  // Also try all connections from peer
-  if(peer&&peer.connections){
-    for(var id in peer.connections){
-      var conns=peer.connections[id];
-      if(Array.isArray(conns)){conns.forEach(function(c){if(c.open)c.send({t:"op",d:op})})}
-    }
-  }
-}
-// ====== 覆写原有动作以支持网络同步 ======
-var _origAdd=add,_origUp=up,_origDel=de;
-add=function(n,p){_origAdd(n,p);if(p){D.col[p]=false}var last=D.tasks[D.tasks.length-1];if(last)setTimeout(function(){broadcast({a:"add",t:last})},10)};
-up=function(i,c){_origUp(i,c);broadcast({a:"upd",i:i,c:c})};
-de=function(i){_origDel(i);broadcast({a:"del",i:i})};
 // ====== 进入房间时启动网络同步 ======
 var _origEn=en;
-en=function(){_origEn();if(D.room){startSync(D.room)}};function ts(m){var e=document.getElementById("ts");if(!e){e=document.createElement("div");e.id="ts";e.className="ts3";document.body.appendChild(e)}e.textContent=m;e.style.display="block";clearTimeout(e._t);e._t=setTimeout(function(){e.style.display="none"},2500)}
+function ts(m){var e=document.getElementById("ts");if(!e){e=document.createElement("div");e.id="ts";e.className="ts3";document.body.appendChild(e)}e.textContent=m;e.style.display="block";clearTimeout(e._t);e._t=setTimeout(function(){e.style.display="none"},2500)}
 function en(){var v=document.getElementById("ri").value.trim();if(!v){return}D.room=v;var u=new URL(window.location);u.searchParams.set("room",v);window.history.replaceState({},"",u);var k="w_"+v;try{var d=JSON.parse(localStorage.getItem(k));if(Array.isArray(d)){D.tasks=d;D.tasks.forEach(function(t){var n=parseInt(t.id.slice(1));if(n>=_id){_id=n+1}})}}catch(e){}rt()}
 function add(n,p){D.tasks.push({id:id$(),name:n,o:"",s:"todo",p:"m",start:"",end:"",desc:"",tag:"",parentId:p||null});if(p){D.col[p]=false}sv();rt()}
 function up(i,c){var t=gt(i);if(t){for(var k in c){t[k]=c[k]}sv();rt()}}
@@ -334,7 +268,7 @@ function renderWelcome(app){
   wc.appendChild(wb);app.appendChild(wc);
   document.getElementById("ri").addEventListener("keydown",function(e){if(e.key==="Enter"){en()}});
 }
-(function(){var ru=(new URLSearchParams(window.location.search)).get("room");if(ru){D.room=ru;var k="w_"+ru;try{var d=JSON.parse(localStorage.getItem(k));if(Array.isArray(d)){D.tasks=d;D.tasks.forEach(function(t){var n=parseInt(t.id.slice(1));if(n>=_id){_id=n+1}})}}catch(e){}}if(ru){startSync(ru)}rt()})();
+(function(){var ru=(new URLSearchParams(window.location.search)).get("room");if(ru){D.room=ru;var k="w_"+ru;try{var d=JSON.parse(localStorage.getItem(k));if(Array.isArray(d)){D.tasks=d;D.tasks.forEach(function(t){var n=parseInt(t.id.slice(1));if(n>=_id){_id=n+1}})}}catch(e){}}rt()})();
 </script>
 </body>
 </html>
