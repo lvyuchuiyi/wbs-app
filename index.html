@@ -333,7 +333,7 @@ function renderWelcome(app){
   wc.appendChild(wb);app.appendChild(wc);
   document.getElementById("ri").addEventListener("keydown",function(e){if(e.key==="Enter"){en()}});
 }
-(function(){var ru=(new URLSearchParams(window.location.search)).get("room");if(ru){D.room=ru;var k="w_"+ru;try{var d=JSON.parse(localStorage.getItem(k));if(Array.isArray(d)){D.tasks=d;D.tasks.forEach(function(t){var n=parseInt(t.id.slice(1));if(n>=_id){_id=n+1}})}}catch(e){}}startSync(ru);rt()})();
+(function(){var ru=(new URLSearchParams(window.location.search)).get("room");if(ru){D.room=ru;var k="w_"+ru;try{var d=JSON.parse(localStorage.getItem(k));if(Array.isArray(d)){D.tasks=d;D.tasks.forEach(function(t){var n=parseInt(t.id.slice(1));if(n>=_id){_id=n+1}})}}catch(e){}}if(ru){startSync(ru)}rt()})();
 </script>
 </body>
 </html>
